@@ -1,2 +1,3 @@
 # 6C35_portfolio
-Portfolio for the class 6.C35 - Data Visualization & Society (MIT)
+
+Portfolio for the class 6.C35 - Interactive Data Visualization & Society (MIT)
