@@ -1,5 +1,7 @@
 :root {
  --color-accent: oklch(0.65 0.111 204);
+ --color-accent-dark: oklch(from var(--color-accent) 50% 50% h);
+ --color-accent-light: oklch(from var(--color-accent) 95% 5% h);
  --color-grey: oklch(80% 3% 200);
 }
 
@@ -44,9 +46,9 @@ nav a.current {
 }
 
 nav a:hover {
-  background-color: oklch(from var(--color-accent) 95% 5% h);
+  background-color: var(--color-accent-light);
   border-bottom-style: solid;
-  border-bottom-color: oklch(from var(--color-accent) 50% 50% h);
+  border-bottom-color: var(--color-accent-dark);
   border-bottom-width: 0.4em;
   padding-bottom: 0.1em;
   margin-bottom: -2px;
@@ -80,4 +82,98 @@ form label {
   grid-column: 1 / -1;
   gap: 1em;
   margin-block: 0.5em;
+}
+
+img {
+  max-width: 100%;
+}
+
+.projects {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15em, 1fr));
+  gap: 1em;
+}
+
+.projects article {
+  display: grid;
+  grid-template-rows: subgrid;
+  grid-row: span 3;
+  margin: 0;
+}
+
+h1 {
+  font-size: 400%;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+h2 {
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+h3 {
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+h4 {
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+h5 {
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+h6 {
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+.contact-info {
+  display: flex;
+}
+
+.contact-info ol, .contact-info ul {
+  display: contents;
+}
+
+.contact-info li {
+  list-style: none;
+  flex: 1;
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+  padding: 0.5em;
+  margin-bottom: 1.5em;
+  border-bottom: 3px solid var(--color-accent-dark);
+  padding-bottom: 1.5em;
+  padding-top: 1.5em;
+  border-top: 3px solid var(--color-accent-dark);
+}
+
+.resume-section {
+  margin-block: 2em;
+  margin-top: -2em;
+  padding-block: 1em;
+  border-bottom: 3px solid var(--color-accent-dark);
+}
+
+.resume-entry {
+  display: grid;
+  grid-template-columns: 1fr minmax(10ch, 18ch);
+  gap: 1.5em 2em;
+}
+
+.resume-entry-meta {
+  margin-top: 1em;
+  text-align: end;
+  font-size: 0.9em;
+  color: oklch(from var(--color-grey) 60% 2% h);
+}
+
+.resume-entry--no-meta {
+  grid-template-columns: 1fr;
 }
