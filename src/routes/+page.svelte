@@ -25,7 +25,7 @@
 
         <p>It is currently under development.</p>
 
-        <img src="images\allison_w_snowman.jpeg" alt="Allison kneeling next to a small snowman" width="500">
+        <img src="images/allison_w_snowman.jpeg" alt="Allison kneeling next to a small snowman" width="500">
     </div>
 
     <aside class="reading-sidebar">
