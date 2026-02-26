@@ -1,3 +1,8 @@
+<script>
+  import projects from "$lib/projects.json";
+  import Project from "$lib/Project.svelte";
+</script>
+
 <svelte:head>
   <title>Projects</title>
 </svelte:head>
@@ -12,17 +17,16 @@
     </ul>
 </nav>
 
-<h1>Projects</h1>
+<h1>{projects.length} Projects</h1>
 
 <div class="projects">
-    <article>
-        <a href="./a2_report.html" style="text-decoration: none; color: inherit;">
-            <h2>6.C35 A2 - Exploratory Data Analysis</h2>
-            <img src="../images/a2_visualizations/overview_map.png" alt="Overview map of the MBTA system">
-            <p>In this assignment, I performed an exploratory data analysis of the MBTA system to answer questions about the coverage and utility of the system.</p>
-        </a>
-    </article>
-    <article>
+    {#each projects as p}
+    <Project data={p} />
+    {/each}
+</div>
+        <!-- <a href="./a2_report.html" style="text-decoration: none; color: inherit;"> -->
+        <!-- <a href="./a2_report.html" style="text-decoration: none; color: inherit;"> -->
+    <!-- <article>
         <h2>Repellat sed asperiores ipsa?</h2>
         <img src="https://vis-society.github.io/labs/2/images/empty.svg" alt="">
         <p>Consequuntur, possimus. Debitis, error mollitia, explicabo molestias labore commodi quas voluptates consequuntur ullam dicta reprehenderit, laboriosam maiores in! Neque, quibusdam. Esse, accusantium quis? Vitae enim, libero rem amet ex sapiente.</p>
@@ -76,5 +80,6 @@
         <h2>Corrupti molestias odio sit?</h2>
         <img src="https://vis-society.github.io/labs/2/images/empty.svg" alt="">
         <p>Repellat a fugiat numquam iure et omnis rem deserunt, officiis quia id voluptatibus temporibus accusantium laboriosam magnam veritatis distinctio autem, sed quaerat eos nulla ratione. Cumque rerum aperiam commodi sint.</p>
-    </article>
-</div>
+    </article> -->
+    <!-- {/each} -->
+
