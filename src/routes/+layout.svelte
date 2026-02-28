@@ -3,6 +3,12 @@
     import "../style.css";
     import { page } from "$app/stores";
     import { base } from "$app/paths";
+    let root = globalThis.document?.documentElement;
+    let localStorage = globalThis.localStorage ?? {};
+    let colorScheme = localStorage.colorScheme ?? "light dark";
+    $: root?.style.setProperty("color-scheme", colorScheme);
+    $: localStorage.colorScheme = colorScheme;
+
     let pages = [
         {url: "/", title: "Home"},
         {url: "/projects", title: "Projects"},
@@ -35,9 +41,22 @@
     </ul>
 </nav>
 
+<label class="color-scheme-switch">
+    Theme:
+    <select bind:value={ colorScheme }>
+        <option value="light dark">Automatic</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label>
+
 <slot />
 
 <style>
+
+    /* :root {
+        color-scheme: dark;
+    } */
 
     nav {
         display: flex;
@@ -48,33 +67,42 @@
 
     ul,
     li {
-    display: contents;
+        display: contents;
     }
 
     a {
-    flex: 1;
-    text-decoration: none;
-    color: inherit;
-    text-align: center;
-    padding: 0.5em;
-    margin-bottom: 0.5em;
+        flex: 1;
+        text-decoration: none;
+        color: inherit;
+        text-align: center;
+        padding: 0.5em;
+        margin-bottom: 5px;
     }
 
     a.current {
-    border-bottom-style: solid;
-    border-bottom-color: var(--color-grey);
-    border-bottom-width: 0.4em;
-    padding-bottom: 0.1em;
-    margin-bottom: -2px;
+        border-bottom-style: solid;
+        border-bottom-color: var(--color-grey);
+        border-bottom-width: 0.4em;
+        padding-bottom: 0.1em;
+        margin-bottom: -3px;
     }
 
     a:hover {
-    background-color: var(--color-accent-light);
-    border-bottom-style: solid;
-    border-bottom-color: var(--color-accent-dark);
-    border-bottom-width: 0.4em;
-    padding-bottom: 0.1em;
-    margin-bottom: -2px;
+        background-color: var(--color-accent-low);
+        border-bottom-style: solid;
+        border-bottom-color: var(--color-accent-med);
+        border-bottom-width: 0.4em;
+        padding-bottom: 0.1em;
+        margin-bottom: -3px;
+    }
+
+    .color-scheme-switch {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        gap: 4px;
+        font-size: 80%;
+        font-family: inherit;
     }
 
 </style>

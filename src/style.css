@@ -1,9 +1,22 @@
 :root {
- --color-accent: oklch(0.65 0.111 204);
- --color-accent-deep: oklch(from var(--color-accent) 30% 50% h);
- --color-accent-dark: oklch(from var(--color-accent) 50% 50% h);
- --color-accent-light: oklch(from var(--color-accent) 95% 5% h);
- --color-grey: oklch(80% 3% 200);
+  --color-accent-default: oklch(0.65 0.111 204);
+  --color-accent-deep-default: oklch(from var(--color-accent-default) 30% 50% h);
+  --color-accent-dark-default: oklch(from var(--color-accent-default) 50% 50% h);
+  --color-accent-light-default: oklch(from var(--color-accent-default) 95% 5% h);
+  --color-grey: oklch(80% 3% 200);
+  --color-accent: color-mix(in oklch, var(--color-accent-deep-default), CanvasText 50%);
+  --color-accent-high: light-dark(
+    color-mix(in oklch, var(--color-accent-default), black 35%),
+    color-mix(in oklch, var(--color-accent-default), white 15%)
+  );
+  --color-accent-med: light-dark(
+    color-mix(in oklch, var(--color-accent-default), black 0%),
+    color-mix(in oklch, var(--color-accent-default), white 60%)
+  );
+  --color-accent-low: light-dark(
+    color-mix(in oklch, var(--color-accent-default), white 70%),
+    color-mix(in oklch, var(--color-accent-default), black 60%)
+  );
 }
 
 body {
@@ -15,6 +28,10 @@ body {
  margin-inline: auto;
  padding: 5ch;
  accent-color: var(--color-accent);
+}
+
+input, textarea, button, select {
+  font: inherit;
 }
 
 /* form label {
@@ -65,7 +82,7 @@ img {
 }
 
 .reading-sidebar {
-  background-color: var(--color-accent-light);
+  background-color: var(--color-accent-low);
   padding: 1.5em;
 }
 
@@ -83,20 +100,20 @@ h1 {
   font-size: 400%;
   line-height: 1.1;
   text-wrap: balance;
-  color: var(--color-accent-deep);
+  color: var(--color-accent-high);
 }
 
 h2 {
   font-size: 200%;
   line-height: 1.1;
   text-wrap: balance;
-  color: var(--color-accent-deep);
+  color: var(--color-accent-high);
 }
 
 h3 {
   line-height: 1.1;
   text-wrap: balance;
-  color: var(--color-accent-dark);
+  color: var(--color-accent-med);
 }
 
 h4 {
@@ -130,17 +147,17 @@ h6 {
   text-align: center;
   padding: 0.5em;
   margin-bottom: 1.5em;
-  border-bottom: 3px solid var(--color-accent-deep);
+  border-bottom: 3px solid var(--color-accent-high);
   padding-bottom: 1.5em;
   padding-top: 1.5em;
-  border-top: 3px solid var(--color-accent-deep);
+  border-top: 3px solid var(--color-accent-high);
 }
 
 .resume-section {
   margin-block: 2em;
   margin-top: -2em;
   padding-block: 1em;
-  border-bottom: 3px solid var(--color-accent-deep);
+  border-bottom: 3px solid var(--color-accent-high);
 }
 
 .resume-entry {

@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
+		<script>
+			let root = document.documentElement;
+			let colorScheme = localStorage.colorScheme ?? "light dark";
+			root.style.setProperty("color-scheme", colorScheme);
+		</script>
 		<base href="%sveltekit.assets%/" />
 		<meta charset="utf-8" />
 		<title>Portfolio</title>
