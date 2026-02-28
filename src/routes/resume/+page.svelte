@@ -3,17 +3,6 @@
 </svelte:head>
 
 
-<nav>
-    <ul>
-        <li><a href=".">Home</a></li>
-        <li><a href="projects">Projects</a></li>
-        <li><a class="current" href="resume">About</a></li>
-        <li><a href="contact">Contact</a></li>
-        <li><a href="https://github.com/allisoneto" target="_blank">GitHub</a></li>
-    </ul>
-</nav>
-
-
 <header>
     <h1>Allison Eto: Resume</h1>
 
