@@ -177,3 +177,21 @@ h6 {
 .resume-entry--no-meta {
   grid-template-columns: 1fr;
 }
+
+.github-stats dl {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.github-stats dl dt {
+  grid-row: 1;
+  color: var(--color-accent-med);
+  font-weight: bold;
+}
+
+.github-stats dl dd {
+  grid-row: 2;
+  font-size: 2em;
+  justify-self: start;
+  margin-inline-start: 0;
+}

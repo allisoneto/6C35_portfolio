@@ -1,38 +1,48 @@
 [
     {
       "title": "6.C35 A2 - Exploratory Data Analysis",
-      "image": "images/a2_visualizations/overview_map.png",
-      "description": "In this assignment, I performed an exploratory data analysis of the MBTA system to answer questions about the coverage and utility of the system."
+      "image": "images/project_imgs/a2_visualizations/overview_map.png",
+      "year": 2026,
+      "description": "In this assignment, I performed an exploratory data analysis of the MBTA system to answer questions about the coverage and utility of the system.",
+      "url": "/projects/a2"
     },
     {
-      "title": "My Second Project",
-      "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-      "description": "In this project, I..."
+      "title": "6.C35 A3 - Visualization Critique & Redesign",
+      "image": "images/project_imgs/a3_visualizations/final_visualization.png",
+      "year": 2026,
+      "description": "In this assignment, I critiqued and redesigned a visualization to be more effective.",
+      "url": "/projects/a3"
     },
     {
-      "title": "My Third Project",
-      "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-      "description": "In this project, I..."
+      "title": "6.C35 A4 - Persuasive or Deceptive Visualization?",
+      "image": "images/project_imgs/a4_visualizations/china_good_final.png",
+      "year": 2026,
+      "description": "In this assignment, I designed two visualizations to support one of each side of an argument.",
+      "url": "/projects/a4"
     },
     {
-      "title": "My Fourth Project",
-      "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-      "description": "In this project, I..."
+      "title": "UROP - Time Series Foundation Models for Variable Star Classification",
+      "image": "images/project_imgs/satsvac/fm_dataset_size_test.png",
+      "year": 2025,
+      "description": "In this project, I fine-tuned several popular time series foundation models to classify variable star light curves, and compared their performance to a custom-built model."
     },
     {
-      "title": "My Fifth Project",
-      "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-      "description": "In this project, I..."
+      "title": "UROP - Diffusion Autoencoder with Perceivers (daep) for Spectra Reconstruction",
+      "image": "images/project_imgs/satsvac/spectra.png",
+      "year": 2025,
+      "description": "In this project, I trained Y. Shen and A. Gagliano's diffusion autoencoder perceiver (their paper is linked here) to reconstruct spectra as a self-supervised pretraining task.",
+      "url": "https://arxiv.org/abs/2510.20595"
     },
     {
-      "title": "My Sixth Project",
-      "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-      "description": "In this project, I..."
+      "title": "6.S058 - MRI Scan Kidney Segmentation",
+      "image": "images/project_imgs/3dmoks/model_seg.png",
+      "year": 2025,
+      "description": "In this project, my partner and I developed a U-Net based model to segment 3D structures of the kidney from MRI scans of mice."
     },
     {
-      "title": "My Seventh Project",
-      "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-      "description": "In this project, I..."
+      "title": "Akamai Internship - Photometric Processing Pipeline",
+      "image": "images/project_imgs/pipnick/photometry.png",
+      "description": "In this project, I developed an image processing pipeline to perform basic reduction, astrometry, and photometry on images from the Nickel Telescope."
     },
     {
       "title": "My Eighth Project",

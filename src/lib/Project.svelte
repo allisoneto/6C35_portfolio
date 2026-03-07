@@ -1,13 +1,22 @@
 <script>
+    import { base } from '$app/paths';
     export let data = {};
 </script>
 
 <article>
-    <!-- <a href="./a2_report.html" style="text-decoration: none; color: inherit;"> -->
-    <h2>{data.title}</h2>
-    <img src={data.image} alt={data.title}>
-    <p>{data.description}</p>
-    <!-- </a> -->
+    {#if data.url}
+        <a href={data.url.startsWith("http") ? data.url : base + data.url}
+           style="text-decoration: none; color: inherit;"
+           target={data.url.startsWith("http") ? "_blank" : null}>
+            <h2>{data.title}</h2>
+            <img src={data.image} alt={data.title}>
+            <p>{data.description}</p>
+        </a>
+    {:else}
+        <h2>{data.title}</h2>
+        <img src={data.image} alt={data.title}>
+        <p>{data.description}</p>
+    {/if}
 </article>
 
 <style>
@@ -15,10 +24,11 @@
     font-size: 125%;
     }
 
+    /* Use flex column so each card sizes to its own content instead of subgrid,
+       which was forcing equal row heights and creating white space above images */
     article {
-    display: grid;
-    grid-template-rows: subgrid;
-    grid-row: span 3;
+    display: flex;
+    flex-direction: column;
     margin: 0;
     }
 </style>
