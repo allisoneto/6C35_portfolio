@@ -195,3 +195,7 @@ h6 {
   justify-self: start;
   margin-inline-start: 0;
 }
+
+.outro {
+  margin-bottom: 2em;
+}
