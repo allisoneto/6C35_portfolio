@@ -2,6 +2,8 @@
   import projects from "$lib/projects.json";
   import Project from "$lib/Project.svelte";
   import ProjectNarrative from "$lib/ProjectNarrative.svelte";
+  import Bar from "$lib/Bar.svelte";
+
   let years = projects.map(proj => proj.year)
   let validYears = years.filter(year => typeof year === "number");
   let range = validYears.length > 0 ? Math.max(...validYears) - Math.min(...validYears) + 1 : 0;
@@ -24,6 +26,10 @@
       wrangled_percentages = wrangled.map(d => d[1] / d3.sum(wrangled, d => d[1]));
       // console.log(wrangled);
   });
+
+  $: barData = d3.rollups(projects, v => v.length, d => d.year)
+    .map(([year, count]) => ({ label: String(year), value: count }));
+
   </script>
 
 <section>
@@ -31,6 +37,8 @@
   <pre>{JSON.stringify(wrangled, null, 2)}</pre>
   <pre>{JSON.stringify(wrangled_percentages, null, 2)}</pre>
 </section>
+
+<Bar data={barData} />
 
 <svelte:head>
   <title>Projects</title>
