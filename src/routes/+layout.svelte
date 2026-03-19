@@ -13,6 +13,7 @@
         {url: "/", title: "Home"},
         {url: "/projects", title: "Projects"},
         {url: "/resume", title: "About"},
+        {url: "/meta", title: "Meta"},
         {url: "/contact", title: "Contact"},
         {url: "https://github.com/allisoneto", title: "GitHub"},
     ]

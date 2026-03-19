@@ -10,12 +10,12 @@
            target={data.url.startsWith("http") ? "_blank" : null}>
             <h2>{data.title}</h2>
             <img src={data.image} alt={data.title}>
-            <p>{data.description}</p>
+            <p><strong>{data.year}</strong> -- {data.description}</p>
         </a>
     {:else}
         <h2>{data.title}</h2>
         <img src={data.image} alt={data.title}>
-        <p>{data.description}</p>
+        <p><strong>{data.year}</strong> -- {data.description}</p>
     {/if}
 </article>
 
