@@ -1,6 +1,7 @@
 <script>
     // import BarHorizontal from "$lib/BarHorizontal.svelte";
     import ScatterPlot from "$lib/ScatterPlot.svelte";
+    import LineChart from "$lib/LineChart.svelte";
 
     import { base } from '$app/paths';
     import { onMount } from 'svelte';
@@ -8,6 +9,7 @@
 
     let locData = [];
     let commits = [];
+    let linesByDate = [];
 
     onMount(async () => {
         locData = await d3.csv(`${base}/loc.csv`, row => ({
@@ -36,8 +38,23 @@
             return ret;
         });
 
+        
+
         console.log(commits);
     });
+
+    $: {const rolled = d3.rollups(
+            locData, v => v.length, d => d3.timeDay.floor(d.datetime)
+        ).map(([date, count]) => ({ date, count }));
+
+        const [minDate, maxDate] = d3.extent(rolled, d => d.date);
+        const allDays = d3.timeDays(minDate, d3.timeDay.offset(maxDate, 1));
+
+        linesByDate = allDays.map(date => ({
+            date, count: rolled.find(d => d.date.getTime() === date.getTime())?.count ?? 0
+        }));
+    }
+
 
     
     // $: barData = d3.rollups(locData, v => v.length, d => d.type)
@@ -54,3 +71,5 @@
 <BarHorizontal data={barData} /> -->
 
 <ScatterPlot commits={commits} locData={locData} />
+
+<LineChart linesByDate={linesByDate}/>

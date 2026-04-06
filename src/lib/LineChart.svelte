@@ -8,13 +8,12 @@
 
     import BarHorizontal from "$lib/BarHorizontal.svelte";
 
-    let width = 500;
+    let width = 1000;
     let height = 300;
 
-    export let commits = [];
-    export let locData = [];
+    export let linesByDate = [];
+    // export let locData = [];
 
-    commits = d3.sort(commits, d => -d.totalLines);
 
     // let margin = { top: 20, right: 20, bottom: 30, left: 60 };
     let margin = { top: 40, right: 50, bottom: 30, left: 60 };
@@ -34,7 +33,7 @@
     let xAxis, yAxis;
     let yAxisGridlines;
 
-    $: [minDate, maxDate] = d3.extent(commits.map(d => d.date));
+    $: [minDate, maxDate] = d3.extent(linesByDate.map(d => d.date));
     $: maxDateFudged = new Date(maxDate);
     $: maxDateFudged.setDate(maxDateFudged.getDate() + 1);
 
@@ -44,12 +43,18 @@
                 .nice();
 
     $: yScale = d3.scaleLinear()
-                .domain([24, 0])
-                .range([usableArea.bottom, usableArea.top]);
+                .domain([0, d3.max(linesByDate, d => d.count)])
+                .range([usableArea.bottom, usableArea.top])
+                .nice();
     
-    $: rScale = d3.scaleSqrt()
-                .domain([0, d3.max(commits, d => d.totalLines)])
-                .range([2, 15]);
+    $: line = d3.line()
+        .x(d => xScale(d.date))
+        .y(d => yScale(d.count))
+        .curve(d3.curveBumpX);
+    
+    // $: rScale = d3.scaleSqrt()
+    //             .domain([0, d3.max(commits, d => d.totalLines)])
+    //             .range([2, 15]);
 
 
     // $: colorScale = d3.scaleOrdinal(d3.schemeTableau10)
@@ -57,7 +62,7 @@
     
     $: if (xAxis && yAxis && yAxisGridlines) {
         d3.select(xAxis).call(d3.axisBottom(xScale).ticks(8)); // reduce number of ticks
-        d3.select(yAxis).call(d3.axisLeft(yScale).tickFormat(d => String(d % 24).padStart(2, "0") + ":00"));
+        d3.select(yAxis).call(d3.axisLeft(yScale).ticks(8));
 
         d3.select(yAxisGridlines).call(
             d3.axisLeft(yScale)
@@ -66,97 +71,43 @@
         );
     }
 
-    let hoveredIndex = -1;
-    $: hoveredCommit = commits[hoveredIndex] ?? hoveredCommit ?? {};
+    let hoveredDay = null; // e.g. "Monday"
 
-    let commitTooltip;
-    let tooltipPosition = {x: 0, y: 0};
-    let clickedCommits = [];
+    $: dayRegions = (() => {
+        // if there's no data, there are no regions!
+        if (linesByDate.length === 0) return [];
+        return linesByDate.map((d, i, arr) => {
+            // get the previous date, if it exists
+            const prev = arr[i - 1];
+            // get the next date, if it exists
+            const next = arr[i + 1];
+            // define the left side of the region, which might be the edge of the axis if this is the first date
+            const left = prev ? new Date((d.date.getTime() + prev.date.getTime()) / 2) : d.date;
+            // define the right side of the region, which might be the edge of the axis if this is the last date
+            const right = next ? new Date((d.date.getTime() + next.date.getTime()) / 2) : d.date;
+            
+            return {
+                date: d.date,
+                weekday: d.date.toLocaleString("en", { weekday: "long" }), // e.g. "Monday"
+                x: xScale(left),
+                width: xScale(right) - xScale(left),
+            };
+        });
+    })();
 
-    async function dotInteraction (index, evt) {
-        let hoveredDot = evt.target;
-        if (evt.type === "mouseenter") {
-            hoveredIndex = index;
-            tooltipPosition = await computePosition(hoveredDot, commitTooltip, {
-                strategy: "fixed", // because we use position: fixed
-                middleware: [
-                    offset(5), // spacing from tooltip to dot
-                    autoPlacement() // see https://floating-ui.com/docs/autoplacement
-                ],
-            });        }
-        else if (evt.type === "mouseleave") {
-            hoveredIndex = -1
-        }
-        else if (evt.type === "click") {
-            let commit = commits[index]
-            if (!clickedCommits.includes(commit)) {
-                // Add the commit to the clickedCommits array
-                clickedCommits = [...clickedCommits, commit];
-            }
-            else {
-                    // Remove the commit from the array
-                    clickedCommits = clickedCommits.filter(c => c !== commit);
-            }
-        }
-
-    }
-
-	$: selectedLines = (selectedCommits.length > 0 ? selectedCommits : commits).flatMap(d => d.lines);
-    $: selectedCounts = d3.rollup(selectedLines, v => v.length, d => d.type);
-    $: allTypes = Array.from(new Set(locData.map(d => d.type)));
-    $: barData = allTypes.map(type =>  ({ label: String(type), value: selectedCounts.get(type) || 0 }));
-
-
-    let svg;
-    $: {
-        d3.select(svg).call(d3.brush()
-            .extent([[usableArea.left, usableArea.top], [usableArea.right, usableArea.bottom]])
-            .on("start brush end", brushed)); 
-
-        d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
-    }
-
-    $: brushSelection = null;
-
-    function brushed (evt) {
-        brushSelection = evt.selection;
-    }
-
-    function isCommitBrushed (commit) {
-        if (!brushSelection) {
-            return false;
-        }
-        const [[x0, y0], [x1, y1]] = brushSelection;
-        const xmin = Math.min(x0, x1);
-        const xmax = Math.max(x0, x1);
-        const ymin = Math.min(y0, y1);
-        const ymax = Math.max(y0, y1);
-        const px = xScale(commit.datetime);
-        const py = yScale(commit.hourFrac);
-        return px >= xmin && px <= xmax && py >= ymin && py <= ymax;
-    }
-
-    $: brushedCommits = brushSelection ? commits.filter(isCommitBrushed) : [];
-    $: selectedCommits = Array.from(new Set([...clickedCommits, ...brushedCommits]));
-
-
-
-
-    // console.log(commits);
-    // $: maxBar = d3.greatest(data, d => d.value);
 
 
 </script>
 
 <div class="container">
-    <svg viewBox="0 0 {width} {height}" bind:this={svg}>
+    <svg viewBox="0 0 {width} {height}" on:mouseleave={() => hoveredDay = null}>
 
         <text
             x={margin.left + innerWidth / 2}
             y={margin.top / 2}
             text-anchor="middle"
             class="chart-title">
-            Commits by Time of Day
+            Lines of Code by Date
         </text>
 
         <g class="gridlines" transform="translate({usableArea.left}, 0)" bind:this={yAxisGridlines} />
@@ -166,43 +117,69 @@
             bind:this={yAxis} class="tick-label"/>
 
         <!-- x-axis label -->
+         <!-- x-axis label -->
         <text
-            x={margin.left + innerWidth / 2}
-            y={margin.top + innerHeight + margin.bottom + 10}
+            x={usableArea.left + (usableArea.right - usableArea.left) / 2}
+            y={height + margin.bottom - 5}
             text-anchor="middle"
             class="axis-label">
-            Time of Day
+            Date
         </text>
 
         <!-- y-axis label -->
-        <!-- <text
-            x={-(margin.top + innerHeight / 2)}
-            y={margin.left - 40}
+        <text
+            x={-(usableArea.top + (usableArea.bottom - usableArea.top) / 2)}
+            y={10}
             text-anchor="middle"
             transform="rotate(-90)"
             class="axis-label">
-            Number of Commits
-        </text> -->
+            Number of Lines Edited
+        </text>
 
-        <g class="dots">
-        {#each commits as commit, index }
-            <circle 
-                class:selected={ selectedCommits.includes(commit) }
-                on:click={ evt => dotInteraction(index, evt) }
-                on:mouseenter={evt => dotInteraction(index, evt)}
-                on:mouseleave={evt => dotInteraction(index, evt)}
-                cx={ xScale(commit.datetime) }
-                cy={ yScale(commit.hourFrac) }
-                r={rScale(commit.totalLines)}
-                fill="steelblue"
+        <path class="line" d={line(linesByDate)}/>
+
+
+        <!-- dots at each data point -->
+        {#each linesByDate as d}
+            {@const isHighlighted = d.date.toLocaleString("en", { weekday: "long" }) === hoveredDay}
+            <circle
+                cx={xScale(d.date)}
+                cy={yScale(d.count)}
+                r={isHighlighted ? 5 : 3}
+                fill={isHighlighted ? "var(--color-accent-high)" : "var(--color-accent-med)"}
             />
-            
+            {#if isHighlighted}
+                <text
+                    x={xScale(d.date)}
+                    y={usableArea.top + 15}
+                    text-anchor="middle"
+                    font-size="12"
+                    fill="var(--color-accent)"
+                >
+                    {Math.round(d.count)}
+                </text>
+            {/if}
+        
         {/each}
-        </g>
+
+        <!-- invisible hover regions -->
+    {#each dayRegions as region}
+        <rect
+            x={region.x}
+            y={usableArea.top}
+            width={region.width}
+            height={usableArea.bottom - usableArea.top}
+            fill={hoveredDay === region.weekday ? "var(--color-accent-high)" : "transparent"}
+            fill-opacity={hoveredDay === region.weekday ? 0.2 : 0}
+            on:mouseenter={() => hoveredDay = region.weekday}
+        />
+    {/each}
+
+
             
     </svg>
 
-    <dl class="info tooltip" hidden={hoveredIndex === -1} bind:this={commitTooltip} style="top: {tooltipPosition.y}px; left: {tooltipPosition.x}px">
+    <!-- <dl class="info tooltip" hidden={hoveredIndex === -1} bind:this={commitTooltip} style="top: {tooltipPosition.y}px; left: {tooltipPosition.x}px">
         <dt>Commit</dt>
         <dd><a href="{ hoveredCommit.url }" target="_blank">{ hoveredCommit.id }</a></dd>
     
@@ -217,7 +194,7 @@
     
         <dt>Lines edited</dt>
             <dd>{ hoveredCommit.totalLines }</dd>
-    </dl>
+    </dl> -->
 
     <!-- <ul class="legend">
         {#each data as d}
@@ -228,13 +205,13 @@
         {/each}
     </ul> -->
 </div>
-<div class="container">
+<!-- <div class="container">
     <BarHorizontal
         data={barData}
         height={150}
         title={selectedCommits.length > 0 ? `Lines of Code: ${selectedCommits.length} Selected Commits` : "Lines of Code: Website Breakdown"}
     />
-</div>
+</div> -->
 
 <style>
     svg {
@@ -244,18 +221,18 @@
     }
 
     .chart-title {
-        font-size: 1em;
+        font-size: 1.5em;
         font-weight: bold;
         fill: currentColor;
     }
 
     .axis-label {
-        font-size: 0.8em;
+        font-size: 1.2em;
         fill: currentColor;
     }
 
     .tick-label {
-        font-size: 0.5em;
+        font-size: 1.0em;
     }
 
     .gridlines {
@@ -268,13 +245,12 @@
         fill-opacity: 0.8;
     }
 
-    circle {
-        transition: 200ms;
-        fill: var(--color-accent-med);
-        &:hover {
-            fill: var(--color-accent);
-        }
+    .line {
+        fill: none;
+        stroke: var(--color-accent-med);
+        stroke-width: 2;
     }
+    
     .selected {
         fill: var(--color-accent);
     }
