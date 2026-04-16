@@ -54,10 +54,12 @@
     
     },
     {
-      "title": "My Eighth Project",
+      "title": "6.C35 Lab 9 - Geospatial Visualizations",
       "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-      "description": "In this project, I...",
-      "story": "In this project, I..."
+      "year": 2026,
+      "description": "In this lab, I built an interactive map of Boston bike traffic using Mapbox and D3, with features like bike lane overlays, station demand markers, time-based filtering, and isochrone visualizations.",
+      "story": "6.C35 Lab 9 tasked us with building an interactive geospatial visualization of Boston bike traffic. Using Mapbox for mapping and D3 for data overlays, I built a map featuring bike lane displays, station markers sized by demand, time-based filtering, and isochrone visualization to show biking accessibility across the city.",
+      "url": "https://allisoneto.github.io/6C35_lab9/"
     },
     {
       "title": "My Ninth Project",
