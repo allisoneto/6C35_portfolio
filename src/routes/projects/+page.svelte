@@ -46,6 +46,7 @@
 
 <Bar data={barData} />
 
+<p>&#8203;</p>
 <p>Scroll down to see my a timeline of my projects and how they've contributed to my professional and personal life</p>
 
 <ProjectNarrative />
